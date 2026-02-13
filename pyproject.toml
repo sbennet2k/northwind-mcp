@@ -1,0 +1,44 @@
+[project]
+name = "northwind-mcp"
+version = "0.1.0"
+description = "A secure Model Context Protocol server for the Northwind database"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+    { name = "Bennet Sundaramurthy", email = "sbennet2k@gmail.com" }
+]
+dependencies = [
+    "fastmcp>=2.14.5",      # Framework for the MCP server
+    "mcp[cli]>=1.26.0",     # Official MCP Python SDK with CLI support
+    "pydantic>=2.12.5",     
+    "sqlparse>=0.5.5",      # SQL parsing and formatting
+    "uvicorn>=0.40.0",      # ASGI server to run the SSE app
+    "sse-starlette>=3.2.0"  # Required for Server-Sent Events transport
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-anyio>=0.0.0",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.15.1",
+]
+
+# pytest config
+[tool.coverage.run]
+# Omit files that are just entry points or static config
+omit = [
+    "northwind_mcp/main.py",
+    "northwind_mcp/logging_config.py",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+# run tests with coverage
+addopts = "--cov=northwind_mcp --cov-report=term-missing"
+markers = [
+  "unit: fast unit tests (no server, no network)",
+  "integration: Tests requiring a running MCP server",
+]

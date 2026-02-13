@@ -1,0 +1,49 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# -----------------------------
+# uv
+# -----------------------------
+# Keep uv.lock (DO NOT ignore)
+# uv.lock
+
+# -----------------------------
+# Testing & Coverage
+# -----------------------------
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# -----------------------------
+# macOS
+# -----------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS Finder metadata
+__MACOSX/
+
+# -----------------------------
+# SQLite Database
+# -----------------------------
+northwind_mcp/data/*.sqlite
+northwind_mcp/data/*.db
+
+# -----------------------------
+# IDEs / Editors
+# -----------------------------
+.vscode/
+.idea/
