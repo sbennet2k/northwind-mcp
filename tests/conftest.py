@@ -56,18 +56,6 @@ async def mcp_session(mcp_server: None):
             await session.initialize()
             yield session
 
-# @pytest.fixture
-# async def mcp_session():
-#     """
-#     Fixture to provide an initialized MCP ClientSession over SSE.
-#     Automatically handles setup and teardown.
-#     """
-#     async with sse_client(MCP_URL) as (read, write):
-#         async with ClientSession(read, write) as session:
-#             await session.initialize()
-#             yield session
-#             # Session and SSE client close automatically here when the test finishes
-
 @pytest.fixture
 def mock_schema():
     """Provides a standard Northwind-style schema for validation tests."""
