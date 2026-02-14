@@ -1,0 +1,66 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      # ---------------------------
+      # Linting
+      # ---------------------------
+      - name: Lint and Format
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      # ---------------------------
+      # Security Scan
+      # ---------------------------
+      - name: Security scan with Bandit
+        run: uv run bandit -r northwind_mcp -ll
+
+      # ---------------------------
+      # Unit Tests
+      # ---------------------------
+      - name: Run unit tests
+        run: uv run pytest -m unit --cov=northwind_mcp --cov-report=xml
+
+      # ---------------------------
+      # Download Northwind DB
+      # ---------------------------
+      - name: Download Northwind DB
+        run: |
+          mkdir -p northwind_mcp/data
+          curl -fsSL -o northwind_mcp/data/northwind.db \
+          https://raw.githubusercontent.com/jpwhite3/northwind-SQLite3/main/dist/northwind.db
+
+      # ---------------------------
+      # Integration Tests
+      # ---------------------------
+      - name: Run integration tests
+        env:
+          TEST_HOST: "127.0.0.1"
+          TEST_PORT: "9001"
+        run: uv run pytest -m integration

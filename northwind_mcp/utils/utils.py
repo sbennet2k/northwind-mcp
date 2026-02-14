@@ -12,6 +12,7 @@ TABLE_REGEX = re.compile(
     re.IGNORECASE | re.VERBOSE,
 )
 
+
 def extract_tables(query: str) -> list[str]:
     """Extract table names from a SQL query."""
 
