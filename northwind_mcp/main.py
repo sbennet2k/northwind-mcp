@@ -13,12 +13,16 @@ Usage:
 from northwind_mcp.server import mcp_server
 from northwind_mcp.logging_config import setup_logging
 import logging
+import os
 
 # FastMCP exposes an ASGI app
 app = mcp_server.sse_app()
 
 setup_logging()  # Setting up the logging config once
 logger = logging.getLogger(__name__)
+
+HOST = os.getenv("MCP_HOST", "127.0.0.1")
+PORT = int(os.getenv("MCP_PORT", 9001))
 
 if __name__ == "__main__":
     import uvicorn
@@ -27,7 +31,7 @@ if __name__ == "__main__":
 
     uvicorn.run(
         "northwind_mcp.main:app",
-        host="0.0.0.0",
-        port=9001,
+        host=HOST,
+        port=PORT,
         log_level="info",
     )
