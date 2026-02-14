@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -34,13 +34,13 @@ jobs:
         run: |
           uv run ruff check .
           uv run ruff format --check .
-      
+
       # ---------------------------
       # Security Scan
       # ---------------------------
       - name: Security scan with Bandit
         run: uv run bandit -r northwind_mcp -ll
-      
+
       # ---------------------------
       # Unit Tests
       # ---------------------------
@@ -53,8 +53,8 @@ jobs:
       - name: Download Northwind DB
         run: |
           mkdir -p northwind_mcp/data
-          curl -L -o northwind_mcp/data/northwind.db \
-          https://github.com/jpwhite3/northwind-SQLite3/raw/master/dist/northwind.db
+          curl -fsSL -o northwind_mcp/data/northwind.db \
+          https://raw.githubusercontent.com/jpwhite3/northwind-SQLite3/main/dist/northwind.db
 
       # ---------------------------
       # Integration Tests
