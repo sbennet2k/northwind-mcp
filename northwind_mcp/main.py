@@ -17,7 +17,7 @@ import logging
 # FastMCP exposes an ASGI app
 app = mcp_server.sse_app()
 
-setup_logging()   # Setting up the logging config once
+setup_logging()  # Setting up the logging config once
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":

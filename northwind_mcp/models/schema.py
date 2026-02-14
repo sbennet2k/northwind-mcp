@@ -17,6 +17,7 @@ class TableColumn(BaseModel):
 # Use RootModel to allow the dictionary to be the top-level object
 class DBSchema(RootModel[dict[str, list[TableColumn]]]):
     """A flat mapping of table names to their column metadata."""
+
     pass
 
 

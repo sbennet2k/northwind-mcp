@@ -18,7 +18,6 @@ from northwind_mcp.models.schema import TableColumn, SQLResult, DBSchema
 
 import re
 import sqlparse
-from sqlparse.tokens import Keyword # type: ignore
 
 from northwind_mcp.utils.utils import extract_tables
 
@@ -67,18 +66,16 @@ def get_db_schema(ctx: Context[Any, Any]) -> DBSchema:
 
 
 @mcp_server.tool()
-def validate_query(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -> dict[str, Any]:
+def validate_query(
+    query: str, params: dict[str, Any], ctx: Context[Any, Any]
+) -> dict[str, Any]:
     """
     Validates a SQL SELECT query using sqlparse with join-aware column validation.
     """
 
     logger.info("Validating SQL query '%s' with params '%s'", query, params)
 
-    result: dict[str, Any] = {
-        "valid": False,
-        "errors": [],
-        "warnings": []
-    }
+    result: dict[str, Any] = {"valid": False, "errors": [], "warnings": []}
 
     # --- Guardrail: SELECT only ---
     parsed = sqlparse.parse(query)
@@ -95,11 +92,20 @@ def validate_query(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -
 
     # --- Blacklist ---
     blacklist = {
-        "INSERT", "UPDATE", "DELETE", "DROP", "ALTER", "CREATE",
-        "ATTACH", "DETACH", "PRAGMA", "VACUUM", "LOAD_EXTENSION"
+        "INSERT",
+        "UPDATE",
+        "DELETE",
+        "DROP",
+        "ALTER",
+        "CREATE",
+        "ATTACH",
+        "DETACH",
+        "PRAGMA",
+        "VACUUM",
+        "LOAD_EXTENSION",
     }
 
-    query_words = re.findall(r'\b\w+\b', query.upper())
+    query_words = re.findall(r"\b\w+\b", query.upper())
     for word in query_words:
         if word.upper() in blacklist:
             result["errors"].append(f"Query contains forbidden keyword: {word.upper()}")
@@ -111,7 +117,7 @@ def validate_query(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -
         result["errors"].append("Query uses parameters but no params were provided.")
         logger.error("Query uses parameters but no params were provided.")
         return result
-    
+
     try:
         # --- Load schema ---
         schema: DBSchema = get_db_schema(ctx)
@@ -135,7 +141,7 @@ def validate_query(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -
 
         if result["errors"]:
             return result
-            
+
         with get_db_connection() as conn:
             cursor = conn.cursor()
             # --- SQLite syntax/schema validation ---
@@ -149,9 +155,7 @@ def validate_query(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -
         # --- Complexity warnings ---
         join_count = query.lower().count("join")
         if join_count > 3:
-            result["warnings"].append(
-                "Query contains multiple JOINs; may be complex."
-            )
+            result["warnings"].append("Query contains multiple JOINs; may be complex.")
             logger.warning("Query contains multiple JOINs; may be complex.")
 
         if "*" in query:
@@ -168,7 +172,9 @@ def validate_query(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -
 
 
 @mcp_server.tool()
-def execute_sql(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -> SQLResult:
+def execute_sql(
+    query: str, params: dict[str, Any], ctx: Context[Any, Any]
+) -> SQLResult:
     """Executes a read-only SELECT query against the Northwind database."""
 
     logger.info("Executing SQL query...")
@@ -187,4 +193,4 @@ def execute_sql(query: str, params: dict[str, Any], ctx: Context[Any, Any]) -> S
             return SQLResult(columns=columns, rows=rows)
         except Exception as e:
             logger.exception("SQL Execution Error")
-            raise e # FastMCP handles this and sends the error to the LLM
+            raise e  # FastMCP handles this and sends the error to the LLM

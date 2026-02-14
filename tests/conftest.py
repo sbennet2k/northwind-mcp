@@ -11,6 +11,7 @@ from northwind_mcp.models.schema import DBSchema, TableColumn
 TEST_HOST = os.getenv("TEST_HOST", "127.0.0.1")
 TEST_PORT = int(os.getenv("TEST_PORT", 9001))
 
+
 async def wait_for_port(host: str, port: int, timeout: int = 10):
     """Wait until a TCP port becomes available."""
     for _ in range(timeout):
@@ -21,10 +22,12 @@ async def wait_for_port(host: str, port: int, timeout: int = 10):
             await asyncio.sleep(1)
     raise RuntimeError("Server did not start in time")
 
+
 @pytest.fixture(scope="session")
 def anyio_backend():
     """Override the default anyio_backend to have session scope."""
     return "asyncio"
+
 
 @pytest.fixture(scope="session")
 async def mcp_server():
@@ -40,10 +43,11 @@ async def mcp_server():
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
-    await wait_for_port(TEST_HOST, TEST_PORT) # Ensure server is up
+    await wait_for_port(TEST_HOST, TEST_PORT)  # Ensure server is up
     yield
-    process.terminate() # send terminate signal to child process
-    await process.wait() # Ensure socket is closed, resources released
+    process.terminate()  # send terminate signal to child process
+    await process.wait()  # Ensure socket is closed, resources released
+
 
 @pytest.fixture
 async def mcp_session(mcp_server: None):
@@ -56,14 +60,25 @@ async def mcp_session(mcp_server: None):
             await session.initialize()
             yield session
 
+
 @pytest.fixture
 def mock_schema():
     """Provides a standard Northwind-style schema for validation tests."""
-    return DBSchema(root={
-        "products": [TableColumn(name="ProductID", type="INT", notnull=True, pk=True)],
-        "categories": [TableColumn(name="CategoryID", type="INT", notnull=True, pk=True)],
-        "users": [], "orders": [], "items": [], "suppliers": []
-    })
+    return DBSchema(
+        root={
+            "products": [
+                TableColumn(name="ProductID", type="INT", notnull=True, pk=True)
+            ],
+            "categories": [
+                TableColumn(name="CategoryID", type="INT", notnull=True, pk=True)
+            ],
+            "users": [],
+            "orders": [],
+            "items": [],
+            "suppliers": [],
+        }
+    )
+
 
 @pytest.fixture
 def mock_db(mocker: MockerFixture):
@@ -73,4 +88,4 @@ def mock_db(mocker: MockerFixture):
     mock_conn.cursor.return_value = mock_cursor
     mock_conn.__enter__.return_value = mock_conn
     mocker.patch("northwind_mcp.server.get_db_connection", return_value=mock_conn)
-    return mock_cursor # Returning the cursor makes assertions easier
+    return mock_cursor  # Returning the cursor makes assertions easier

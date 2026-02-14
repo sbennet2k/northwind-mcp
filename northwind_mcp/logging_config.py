@@ -1,7 +1,7 @@
 """
 Logging configuration for the Northwind MCP Server.
 
-Sets up structured logging to stderr to prevent interference with 
+Sets up structured logging to stderr to prevent interference with
 the MCP JSON-RPC protocol on stdout.
 """
 
@@ -33,7 +33,7 @@ LOGGING_CONFIG: dict[str, Any] = {
         "stderr": {
             "class": "logging.StreamHandler",
             "formatter": "default",
-            "stream": sys.stderr, # Must be stderr for MCP
+            "stream": sys.stderr,  # Must be stderr for MCP
         }
     },
     "loggers": {
