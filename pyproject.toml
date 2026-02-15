@@ -1,6 +1,6 @@
 [project]
 name = "northwind-mcp"
-version = "0.1.0"
+version = "1.0.0"
 description = "A secure Model Context Protocol server for the Northwind database"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -26,6 +26,9 @@ dev = [
     "pytest-mock>=3.15.1",
     "ruff>=0.15.1",
 ]
+
+[tool.uv]
+package = true
 
 # pytest config
 [tool.coverage.run]
