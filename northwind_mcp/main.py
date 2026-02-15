@@ -10,13 +10,14 @@ Usage:
     uvicorn northwind_mcp.main:app --host 0.0.0.0 --port 9001
 """
 
-from northwind_mcp.server import mcp_server
-from northwind_mcp.logging_config import setup_logging
 import logging
 import os
 
+from northwind_mcp.logging_config import setup_logging
+from northwind_mcp.server import mcp_server
+
 # FastMCP exposes an ASGI app
-app = mcp_server.sse_app()
+app = mcp_server.streamable_http_app()
 
 setup_logging()  # Setting up the logging config once
 logger = logging.getLogger(__name__)

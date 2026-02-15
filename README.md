@@ -3,7 +3,7 @@
 [![Python](https://img.shields.io/badge/python-3.12+-blue.svg)]()
 [![MCP Server](https://img.shields.io/badge/MCP-Server-purple)]()
 [![FastMCP](https://img.shields.io/badge/Framework-FastMCP-blueviolet)]()
-[![SSE Transport](https://img.shields.io/badge/Transport-SSE-orange)]()
+[![Streamable HTTP](https://img.shields.io/badge/Transport-StreamableHTTP-orange)]()
 [![SQLite](https://img.shields.io/badge/SQLite-Northwind-blue)]()
 [![SQL Guardrails](https://img.shields.io/badge/SQL-Guardrails-red)]()
 [![Pytest](https://img.shields.io/badge/Tests-Unit%20%2B%20Integration-green)]()
@@ -16,7 +16,7 @@ It demonstrates multi-layered SQL validation, schema-aware guardrails, and defen
 
 ## Features
 
-* MCP Tool Interface – Exposes tools over SSE for LLM agents.
+* MCP Tool Interface – Exposes tools over Streamable HTTP for modern LLM agents.
 * Safe SQL Execution – Enforces SELECT-only queries with multi-layer validation.
 * Schema-Aware Guardrails – Prevents invalid or hallucinated tables/columns.
 * Preflight Validation – Uses SQLite EXPLAIN to verify queries before execution.
@@ -34,7 +34,7 @@ It demonstrates multi-layered SQL validation, schema-aware guardrails, and defen
 
 ## Tech Stack
 
-*   **[MCP](https://modelcontextprotocol.io) (via FastMCP)**: Defines and exposes structured tools for LLM interaction over SSE. Acts as the boundary between AI reasoning and backend logic.
+*   **[MCP](https://modelcontextprotocol.io) (via FastMCP)**: Defines and exposes structured tools for LLM interaction over Streamable HTTP.
 *   **[SQLite3](https://www.sqlite.org) (Read-Only mode)**: Lightweight database used to demonstrate safe, immutable query execution.
 *   **[sqlparse](https://sqlparse.readthedocs.io)**: Parses and validates SQL structure. Ensures: Single statement, SELECT-only.
 *   **[Pydantic v2](https://docs.pydantic.dev)**: Provides strict, typed response models for tool outputs.
@@ -53,13 +53,13 @@ flowchart LR
     MCP[Northwind MCP Server]
     DB[(Northwind SQLite Database)]
 
-    User -->|MCP over SSE| MCP
+    User -->|MCP over Streamable HTTP| MCP
     MCP -->|Read-only SQL| DB
 ```
 
 **Description**
 
-* The LLM Agent communicates via the Model Context Protocol (SSE transport).
+* The LLM Agent communicates via the Model Context Protocol (Streamable HTTP transport).
 * The MCP Server acts as a secure boundary.
 * The SQLite database is never directly exposed to the agent.
 
@@ -71,7 +71,7 @@ The server sits between an MCP-compatible agent and the SQLite database, enforci
 
 ```mermaid
 flowchart TD
-    A[LLM Agent / MCP Client] -->|SSE| B[Northwind MCP Server]
+    A[LLM Agent / MCP Client] -->|Streamable HTTP| B[Northwind MCP Server]
 
     B --> C[get_db_schema]
     B --> D[validate_query]
@@ -101,7 +101,7 @@ northwind-mcp/
 │
 ├── northwind_mcp/              # Application package
 │   ├── __init__.py
-│   ├── main.py                 # ASGI entrypoint (SSE app)
+│   ├── main.py                 # ASGI entrypoint (Streamable HTTP app)
 │   ├── server.py               # MCP tool definitions
 │   ├── connection.py           # SQLite3 connection handling
 │   ├── logging_config.py       # Logging configuration
@@ -158,6 +158,13 @@ After downloading, copy the `northwind.db` file into directory:
 northwind_mcp/data/
 ```
 
+Following `curl` command can be used to download and save the db file:
+
+```bash
+curl -fsSL -o northwind_mcp/data/northwind.db \
+https://raw.githubusercontent.com/jpwhite3/northwind-SQLite3/main/dist/northwind.db
+```
+
 ### 4. Running the MCP Server
 
 **NOTE:** Logging level configuration can be controlled with environment variable `LOG_LEVEL` (defaults to `INFO` if not provided).
@@ -171,15 +178,17 @@ python -m northwind_mcp.main
 ### Option 2 — Uvicorn directly
 ```bash
 export LOG_LEVEL=DEBUG
-uvicorn northwind_mcp.main:app --host 0.0.0.0 --port 9001
+uvicorn northwind_mcp.main:app --host 127.0.0.0 --port 9001
 ```
 
 The MCP server will run on: `http://localhost:9001`
 
-The MCP SSE endpoint will be available at:
+The Streamable HTTP endpoint will be available at:
 ```bash
-http://localhost:9001/sse
+http://localhost:9001/mcp
 ```
+
+*(Note: Depending on the FastMCP configuration, the server may also respond directly at the root /)*
 
 ## Running tests
 
@@ -258,7 +267,7 @@ Run using uv:
 This server is compatible with:
 * MCP-compatible LLM agents
 * FastMCP clients
-* Any MCP client supporting SSE transport
+* Any MCP client supporting Streamable HTTP transport
 
 ## LLM Instructions
 
