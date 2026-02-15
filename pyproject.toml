@@ -13,8 +13,8 @@ dependencies = [
     "mcp[cli]>=1.26.0",     # Official MCP Python SDK with CLI support
     "pydantic>=2.12.5",     
     "sqlparse>=0.5.5",      # SQL parsing and formatting
-    "uvicorn>=0.40.0",      # ASGI server to run the SSE app
-    "sse-starlette>=3.2.0"  # Required for Server-Sent Events transport
+    "uvicorn>=0.40.0",      # ASGI server to run the Streamable HTTP app
+    "httpx>=0.28.1",        # Required for Streamable HTTP transport logic
 ]
 
 [dependency-groups]

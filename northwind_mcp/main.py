@@ -1,13 +1,13 @@
 """
 Main entry point for the Northwind MCP Server.
 
-Initializes the FastMCP server via Server-Sent Events (SSE),
-configures global logging, and provides a Uvicorn-based runner.
+Initializes the FastMCP server, configures global logging,
+and provides a Uvicorn-based runner.
 
 Usage:
     python -m northwind_mcp.main
     OR
-    uvicorn northwind_mcp.main:app --host 0.0.0.0 --port 9001
+    uvicorn northwind_mcp.main:app --host 127.0.0.0 --port 9001
 """
 
 import logging
