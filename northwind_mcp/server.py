@@ -10,17 +10,15 @@ Exposed Tools:
 """
 
 import logging
+import re
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP, Context
-from northwind_mcp.connection import get_db_connection
-from northwind_mcp.models.schema import TableColumn, SQLResult, DBSchema
-
-import re
 import sqlparse
+from mcp.server.fastmcp import Context, FastMCP
 
+from northwind_mcp.connection import get_db_connection
+from northwind_mcp.models.schema import DBSchema, SQLResult, TableColumn
 from northwind_mcp.utils.utils import extract_tables
-
 
 mcp_server = FastMCP("NorthwindMCP")
 
