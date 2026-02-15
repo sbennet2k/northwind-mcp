@@ -17,7 +17,6 @@ from northwind_mcp.logging_config import setup_logging
 from northwind_mcp.server import mcp_server
 
 # FastMCP exposes an ASGI app
-# app = mcp_server.sse_app()
 app = mcp_server.streamable_http_app()
 
 setup_logging()  # Setting up the logging config once

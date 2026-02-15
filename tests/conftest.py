@@ -54,7 +54,6 @@ async def mcp_server():
 async def mcp_session(mcp_server: None):
     """Provide initialized MCP ClientSession."""
 
-    # url = f"http://{TEST_HOST}:{TEST_PORT}/sse"
     url = f"http://{TEST_HOST}:{TEST_PORT}/mcp"
 
     # async with sse_client(url) as (read, write):
