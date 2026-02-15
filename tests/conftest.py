@@ -1,12 +1,13 @@
-import pytest
+import asyncio
 import os
 import socket
-import asyncio
-from mcp.client.session import ClientSession
-from mcp.client.sse import sse_client
-from pytest_mock import MockerFixture
-from northwind_mcp.models.schema import DBSchema, TableColumn
 
+import pytest
+from mcp.client.session import ClientSession
+from mcp.client.streamable_http import streamable_http_client
+from pytest_mock import MockerFixture
+
+from northwind_mcp.models.schema import DBSchema, TableColumn
 
 TEST_HOST = os.getenv("TEST_HOST", "127.0.0.1")
 TEST_PORT = int(os.getenv("TEST_PORT", 9001))
@@ -53,9 +54,11 @@ async def mcp_server():
 async def mcp_session(mcp_server: None):
     """Provide initialized MCP ClientSession."""
 
-    url = f"http://{TEST_HOST}:{TEST_PORT}/sse"
+    # url = f"http://{TEST_HOST}:{TEST_PORT}/sse"
+    url = f"http://{TEST_HOST}:{TEST_PORT}/mcp"
 
-    async with sse_client(url) as (read, write):
+    # async with sse_client(url) as (read, write):
+    async with streamable_http_client(url) as (read, write, _):
         async with ClientSession(read, write) as session:
             await session.initialize()
             yield session
