@@ -16,6 +16,7 @@ attrs==25.4.0
     #   referencing
 authlib==1.6.6
     # via fastmcp
+bandit==1.9.3
 beartype==0.22.9
     # via
     #   py-key-value-aio
@@ -39,6 +40,7 @@ cloudpickle==3.1.2
     # via pydocket
 colorama==0.4.6 ; sys_platform == 'win32'
     # via
+    #   bandit
     #   click
     #   pytest
 coverage==7.13.3
@@ -199,7 +201,9 @@ pywin32==311 ; sys_platform == 'win32'
 pywin32-ctypes==0.2.3 ; sys_platform == 'win32'
     # via keyring
 pyyaml==6.0.3
-    # via jsonschema-path
+    # via
+    #   bandit
+    #   jsonschema-path
 redis==7.1.0
     # via
     #   fakeredis
@@ -214,6 +218,7 @@ requests==2.32.5
     # via jsonschema-path
 rich==14.3.2
     # via
+    #   bandit
     #   cyclopts
     #   fastmcp
     #   pydocket
@@ -225,6 +230,7 @@ rpds-py==0.30.0
     # via
     #   jsonschema
     #   referencing
+ruff==0.15.1
 secretstorage==3.5.0 ; sys_platform == 'linux'
     # via keyring
 shellingham==1.5.4
@@ -243,6 +249,8 @@ starlette==0.52.1
     # via
     #   mcp
     #   sse-starlette
+stevedore==5.6.0
+    # via bandit
 typer==0.21.1
     # via
     #   mcp

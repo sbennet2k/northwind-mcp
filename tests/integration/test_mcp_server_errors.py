@@ -1,7 +1,8 @@
+from typing import Any
+
 import pytest
 from mcp.client.session import ClientSession
-from mcp.client.sse import sse_client
-from typing import Any
+from mcp.client.streamable_http import streamable_http_client
 
 
 @pytest.mark.anyio
@@ -51,10 +52,10 @@ async def test_integration_server_connection_refused():
     """Verify the client handles a completely offline server."""
 
     # Use a port that definitely isn't running
-    BAD_URL = "http://localhost:9999/sse"
+    BAD_URL = "http://localhost:9999/mcp"
 
     with pytest.raises(Exception):
-        async with sse_client(BAD_URL) as (read, write):  # type: ignore
+        async with streamable_http_client(BAD_URL) as (read, write):  # type: ignore
             pass
 
 
