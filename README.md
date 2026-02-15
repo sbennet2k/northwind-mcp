@@ -262,6 +262,51 @@ or
 Run using uv:
 `uv run pytest -m unit`
 
+## Using MCP Inspector
+
+Official MCP Inspector UI can be used to interact with the Northwind MCP server.
+
+### Start the MCP Server
+
+From project root:
+```bash
+uv run python -m northwind_mcp.main
+```
+
+By default, the server runs at:
+```bash
+http://localhost:9001/mcp
+```
+
+### Start MCP Inspector
+
+In a separate terminal:
+```bash
+npx @modelcontextprotocol/inspector
+```
+
+Start-up output similar to the below should be seen:
+```bash
+Starting MCP inspector...
+Proxy server listening on localhost:6277
+Session token: <token>
+
+MCP Inspector is up and running at:
+http://localhost:6274/?MCP_PROXY_AUTH_TOKEN=<token>
+```
+
+### Open the MCP Inspector UI
+* Open the MCP Inspector URL in browser
+* Set Transport Type to: `Streamable HTTP`
+* Enter the MCP server URL: `http://localhost:9001/mcp`
+* Click on Connect
+* Connection to `NorthwindMCP` should be established
+* Go to `Tools` section and `List Tools`
+* Tools should be listed
+* Continue with testing the tools by providing input and verifying the output
+
+![MCP Inspector UI](mcp_inspector_ui.png)
+
 ## MCP Integration
 
 This server is compatible with:
