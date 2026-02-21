@@ -91,3 +91,12 @@ def mock_db(mocker: MockerFixture):
     mock_conn.__enter__.return_value = mock_conn
     mocker.patch("northwind_mcp.server.get_db_connection", return_value=mock_conn)
     return mock_cursor  # Returning the cursor makes assertions easier
+
+
+@pytest.fixture
+def mock_db_conn(mocker: MockerFixture):
+    """Mocks get_db_connection context manager (connection only)."""
+    mock_conn = mocker.MagicMock()
+    mock_conn.__enter__.return_value = mock_conn  # Context manager support
+    mocker.patch("northwind_mcp.server.get_db_connection", return_value=mock_conn)
+    return mock_conn
