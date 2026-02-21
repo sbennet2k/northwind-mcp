@@ -57,7 +57,7 @@ flowchart LR
     MCP -->|Read-only SQL| DB
 ```
 
-**Description**
+**Description** 
 
 * The LLM Agent communicates via the Model Context Protocol (Streamable HTTP transport).
 * The MCP Server acts as a secure boundary.
