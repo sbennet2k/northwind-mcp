@@ -11,6 +11,8 @@ Exposed Tools:
 
 import logging
 import re
+from datetime import datetime
+from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 
 import sqlparse
@@ -24,6 +26,40 @@ mcp_server = FastMCP("NorthwindMCP")
 
 
 logger = logging.getLogger(__name__)
+
+
+@mcp_server.tool()
+def ping(ctx: Context[Any, Any]) -> dict[str, Any]:
+    """
+    Checks the health of the Northwind MCP server and its database connection.
+    """
+    logger.info("Ping received, checking system health...")
+
+    # Try to get version from pyproject.toml/metadata
+    try:
+        # Replace 'northwind_mcp' with the actual package name in your toml
+        pkg_version = version("northwind_mcp")
+    except PackageNotFoundError:
+        pkg_version = "unknown"
+
+    # Check Database Health
+    db_status = "healthy"
+    try:
+        with get_db_connection() as conn:
+            conn.execute("SELECT 1").fetchone()
+    except Exception as e:
+        logger.error("Ping failed database check: %s", e)
+        db_status = f"unhealthy: {str(e)}"
+
+    current_time = datetime.now().astimezone().strftime("%d-%m-%Y %H:%M:%S %Z")
+
+    return {
+        "status": "ok" if db_status == "healthy" else "degraded",
+        "version": pkg_version,
+        "database": db_status,
+        "timestamp": current_time,
+        "service": "NorthwindMCP",
+    }
 
 
 @mcp_server.tool()

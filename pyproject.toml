@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [
-    { name = "Bennet Sundaramurthy", email = "sbennet2k@gmail.com" }
+    { name = "Bennet Sundaramurthy", email = "97792558+sbennet2k@users.noreply.github.com" }
 ]
 dependencies = [
     "fastmcp>=2.14.5",      # Framework for the MCP server
